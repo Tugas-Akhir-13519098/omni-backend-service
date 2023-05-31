@@ -34,7 +34,7 @@ func (p *productRepository) CreateProduct(product *datastruct.Product) error {
 }
 
 func (p *productRepository) GetProducts(req *datastruct.GetProductsRequest) (*datastruct.GetProductsResponse, error) {
-	px := p.db.Model(&datastruct.Product{}).Where("deleted_at IS NULL")
+	px := p.db.Model(&datastruct.Product{})
 
 	var total int64
 	err := px.Count(&total).Error
@@ -58,9 +58,9 @@ func (p *productRepository) GetProducts(req *datastruct.GetProductsRequest) (*da
 	}, nil
 }
 
-func (p *productRepository) GetProductByID(questionID string) (*datastruct.Product, error) {
+func (p *productRepository) GetProductByID(productId string) (*datastruct.Product, error) {
 	var product *datastruct.Product
-	err := p.db.Model(&datastruct.Product{}).Where("id = ? AND deleted_at IS NULL", questionID).First(&product).Error
+	err := p.db.Model(&datastruct.Product{}).Where("id = ?", productId).First(&product).Error
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +69,7 @@ func (p *productRepository) GetProductByID(questionID string) (*datastruct.Produ
 }
 
 func (p *productRepository) UpdateProduct(product *datastruct.Product) error {
-	err := p.db.Model(&datastruct.Product{}).Where("id = ?  AND deleted_at IS NULL", product.ID).Updates(product).Error
+	err := p.db.Model(&datastruct.Product{}).Where("id = ?", product.ID).Updates(product).Error
 	if err != nil {
 		return err
 	}
@@ -84,7 +84,7 @@ func (p *productRepository) UpdateProductByName(productName string, tokopediaID 
 		"updated_at":   time.Now(),
 	}
 
-	err := p.db.Model(&datastruct.Product{}).Where("name = ?  AND deleted_at IS NULL", productName).
+	err := p.db.Model(&datastruct.Product{}).Where("name = ?", productName).
 		Updates(updatedProduct).Error
 
 	if err != nil {
@@ -95,8 +95,7 @@ func (p *productRepository) UpdateProductByName(productName string, tokopediaID 
 }
 
 func (p *productRepository) DeleteProductByID(productID string) error {
-	err := p.db.Model(&datastruct.Product{}).Where("id = ?  AND deleted_at IS NULL", productID).
-		Update("deleted_at", time.Now()).Error
+	err := p.db.Where("id = ?", productID).Delete(&datastruct.Product{}).Error
 
 	if err != nil {
 		return err

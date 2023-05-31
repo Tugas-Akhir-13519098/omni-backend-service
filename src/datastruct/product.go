@@ -17,7 +17,6 @@ type Product struct {
 	ShopeeID    int
 	CreatedAt   *time.Time
 	UpdatedAt   *time.Time
-	DeletedAt   *time.Time
 }
 
 type GetProductsRequest struct {
