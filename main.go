@@ -8,6 +8,7 @@ import (
 	"omnichannel-backend-service/src/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/segmentio/kafka-go"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -22,6 +23,16 @@ func NewDB(cfg *config.Config) (*gorm.DB, error) {
 	return db, nil
 }
 
+func NewKafkaWriter(cfg *config.Config) *kafka.Writer {
+	config := kafka.WriterConfig{
+		Brokers: []string{fmt.Sprintf("%s:%s", cfg.KafkaHost, cfg.KafkaPort)},
+		Topic:   cfg.KafkaProductTopic,
+	}
+	writer := kafka.NewWriter(config)
+
+	return writer
+}
+
 func main() {
 	cfg := config.Get()
 
@@ -31,7 +42,10 @@ func main() {
 		panic(fmt.Sprintf("cannot connect to db: %v", err))
 	}
 
-	productRepository := repository.NewProductRepository(db)
+	// kafka
+	writer := NewKafkaWriter(&cfg)
+
+	productRepository := repository.NewProductRepository(db, writer)
 
 	productService := service.NewProductService(productRepository)
 
@@ -48,7 +62,7 @@ func main() {
 		productRoute.GET("/:id", productController.GetProduct)
 		productRoute.GET("/", productController.GetProducts)
 		productRoute.PUT("/:id", productController.UpdateProduct)
-		productRoute.PUT("/name/:name", productController.UpdateProductByName)
+		productRoute.PUT("/marketplace/:id", productController.UpdateMarketplaceProductId)
 		productRoute.DELETE("/:id", productController.DeleteProduct)
 	}
 

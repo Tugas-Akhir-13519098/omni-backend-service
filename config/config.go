@@ -1,8 +1,6 @@
 package config
 
 import (
-	"encoding/base64"
-
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -16,42 +14,15 @@ type Config struct {
 	DBUser     string `envconfig:"DB_USER" default:""`
 	DBPassword string `envconfig:"DB_PASSWORD" default:""`
 
-	RedisHost     string `envconfig:"REDIS_HOST" default:""`
-	RedisPort     int    `envconfig:"REDIS_PORT" default:""`
-	RedisPassword string `envconfig:"REDIS_PASSWORD" default:""`
-
-	JWTPrivateKey string `envconfig:"JWT_PRIVATE_KEY" default:""` // base64 format
-	JWTPublicKey  string `envconfig:"JWT_PUBLIC_KEY" default:""`  // base64 format
-	JWTDuration   int    `envconfig:"JWT_DURATION" default:""`
-
-	SessionKey string `envconfig:"SESSION_KEY" default:""`
+	KafkaHost         string `envconfig:"KAFKA_HOST" default:"localhost"`
+	KafkaPort         string `envconfig:"KAFKA_PORT" default:"9092"`
+	KafkaProductTopic string `envconfig:"KAFKA_PRODUCT_TOPIC" default:"product"`
 }
 
 // Get to get defined configuration
 func Get() Config {
 	cfg := Config{}
 	envconfig.MustProcess("", &cfg)
-
-	// convert private key back to string
-	decodedJWTPrivateKey, err := base64.StdEncoding.DecodeString(cfg.JWTPrivateKey)
-	if err != nil {
-		panic(err)
-	}
-	cfg.JWTPrivateKey = string(decodedJWTPrivateKey)
-
-	// convert private key back to string
-	decodedJWTPublicKey, err := base64.StdEncoding.DecodeString(cfg.JWTPublicKey)
-	if err != nil {
-		panic(err)
-	}
-	cfg.JWTPublicKey = string(decodedJWTPublicKey)
-
-	// convert private key back to string
-	decodedSessionKey, err := base64.StdEncoding.DecodeString(cfg.SessionKey)
-	if err != nil {
-		panic(err)
-	}
-	cfg.SessionKey = string(decodedSessionKey)
 
 	return cfg
 }

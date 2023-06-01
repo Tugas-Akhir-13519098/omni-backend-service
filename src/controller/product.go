@@ -13,7 +13,7 @@ type ProductController interface {
 	GetProduct(c *gin.Context)
 	GetProducts(c *gin.Context)
 	UpdateProduct(c *gin.Context)
-	UpdateProductByName(c *gin.Context)
+	UpdateMarketplaceProductId(c *gin.Context)
 	DeleteProduct(c *gin.Context)
 }
 
@@ -92,23 +92,23 @@ func (p *productController) UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Successfully updated product with id: " + product.ID, "status": "success"})
 }
 
-func (p *productController) UpdateProductByName(c *gin.Context) {
-	product := &model.UpdateProductByNameRequest{}
-	product.Name = c.Param("name")
+func (p *productController) UpdateMarketplaceProductId(c *gin.Context) {
+	product := &model.UpdateMarketplaceProductID{}
+	product.ID = c.Param("id")
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
-	err := p.productService.UpdateProductByName(product)
+	err := p.productService.UpdateMarketplaceProductId(product)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
-	c.JSON(http.StatusNoContent, gin.H{"status": "success"})
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully updated marketplace's product id of product id: " + product.ID, "status": "success"})
 }
 
 func (p *productController) DeleteProduct(c *gin.Context) {

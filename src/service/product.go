@@ -14,7 +14,7 @@ type ProductService interface {
 	GetProduct(productID string) (*model.Product, error)
 	GetProducts(req *model.GetProductsRequest) (*model.GetProductsResponse, error)
 	UpdateProduct(product *model.Product) error
-	UpdateProductByName(req *model.UpdateProductByNameRequest) error
+	UpdateMarketplaceProductId(req *model.UpdateMarketplaceProductID) error
 	DeleteProduct(productID string) error
 }
 
@@ -98,8 +98,8 @@ func (p *productService) UpdateProduct(product *model.Product) error {
 	return nil
 }
 
-func (p *productService) UpdateProductByName(req *model.UpdateProductByNameRequest) error {
-	err := p.productRepository.UpdateProductByName(req.Name, req.TokopediaID, req.ShopeeID)
+func (p *productService) UpdateMarketplaceProductId(req *model.UpdateMarketplaceProductID) error {
+	err := p.productRepository.UpdateMarketplaceProductId(req.ID, req.TokopediaProductID, req.ShopeeProductID)
 	if err != nil {
 		return err
 	}
@@ -117,14 +117,14 @@ func (p *productService) DeleteProduct(productID string) error {
 
 func transformToProduct(product *datastruct.Product) *model.Product {
 	return &model.Product{
-		ID:          product.ID,
-		Name:        product.Name,
-		Price:       product.Price,
-		Weight:      product.Weight,
-		Stock:       product.Stock,
-		Image:       product.Image,
-		Description: product.Description,
-		TokopediaID: product.TokopediaID,
-		ShopeeID:    product.ShopeeID,
+		ID:                 product.ID,
+		Name:               product.Name,
+		Price:              product.Price,
+		Weight:             product.Weight,
+		Stock:              product.Stock,
+		Image:              product.Image,
+		Description:        product.Description,
+		TokopediaProductID: product.TokopediaProductID,
+		ShopeeProductID:    product.ShopeeProductID,
 	}
 }

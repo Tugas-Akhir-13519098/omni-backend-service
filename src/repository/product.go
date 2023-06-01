@@ -1,9 +1,12 @@
 package repository
 
 import (
+	"context"
+	"encoding/json"
 	"omnichannel-backend-service/src/datastruct"
 	"time"
 
+	"github.com/segmentio/kafka-go"
 	"gorm.io/gorm"
 )
 
@@ -12,20 +15,34 @@ type ProductRepository interface {
 	GetProducts(req *datastruct.GetProductsRequest) (*datastruct.GetProductsResponse, error)
 	GetProductByID(productID string) (*datastruct.Product, error)
 	UpdateProduct(product *datastruct.Product) error
-	UpdateProductByName(productName string, tokopediaID int, shopeeID int) error
+	UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int) error
 	DeleteProductByID(productID string) error
 }
 
 type productRepository struct {
-	db *gorm.DB
+	db     *gorm.DB
+	writer *kafka.Writer
 }
 
-func NewProductRepository(db *gorm.DB) ProductRepository {
-	return &productRepository{db: db}
+func NewProductRepository(db *gorm.DB, writer *kafka.Writer) ProductRepository {
+	return &productRepository{db: db, writer: writer}
 }
 
 func (p *productRepository) CreateProduct(product *datastruct.Product) error {
 	err := p.db.Model(&datastruct.Product{}).Create(&product).Error
+	if err != nil {
+		return err
+	}
+
+	// Change product to byte
+	productMessage := ConvertToProductMessage(product, "CREATE")
+	messageByte, err := json.Marshal(productMessage)
+	if err != nil {
+		return err
+	}
+
+	// Publish to Kafka Topic
+	err = PublishMessage(p.writer, product.ID, messageByte)
 	if err != nil {
 		return err
 	}
@@ -74,17 +91,30 @@ func (p *productRepository) UpdateProduct(product *datastruct.Product) error {
 		return err
 	}
 
+	// Change product to byte
+	productMessage := ConvertToProductMessage(product, "UPDATE")
+	messageByte, err := json.Marshal(productMessage)
+	if err != nil {
+		return err
+	}
+
+	// Publish to Kafka Topic
+	err = PublishMessage(p.writer, product.ID, messageByte)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (p *productRepository) UpdateProductByName(productName string, tokopediaID int, shopeeID int) error {
+func (p *productRepository) UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int) error {
 	updatedProduct := map[string]interface{}{
-		"tokopedia_id": tokopediaID,
-		"shopee_id":    shopeeID,
-		"updated_at":   time.Now(),
+		"tokopedia_product_id": TokopediaProductID,
+		"shopee_product_id":    ShopeeProductID,
+		"updated_at":           time.Now(),
 	}
 
-	err := p.db.Model(&datastruct.Product{}).Where("name = ?", productName).
+	err := p.db.Model(&datastruct.Product{}).Where("name = ?", productID).
 		Updates(updatedProduct).Error
 
 	if err != nil {
@@ -101,5 +131,45 @@ func (p *productRepository) DeleteProductByID(productID string) error {
 		return err
 	}
 
+	// Change product to byte
+	product := &datastruct.Product{}
+	productMessage := ConvertToProductMessage(product, "DELETE")
+	messageByte, err := json.Marshal(productMessage)
+	if err != nil {
+		return err
+	}
+
+	// Publish to Kafka Topic
+	err = PublishMessage(p.writer, productID, messageByte)
+	if err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func PublishMessage(writer *kafka.Writer, key string, message []byte) error {
+	err := writer.WriteMessages(context.Background(), kafka.Message{
+		Key:   []byte(key),
+		Value: []byte(message),
+	})
+
+	return err
+}
+
+func ConvertToProductMessage(product *datastruct.Product, method string) *datastruct.ProductMessage {
+	productMessage := &datastruct.ProductMessage{
+		Method:             method,
+		ID:                 product.ID,
+		Name:               product.Name,
+		Price:              product.Price,
+		Weight:             product.Weight,
+		Stock:              product.Stock,
+		Image:              product.Image,
+		Description:        product.Description,
+		TokopediaProductID: product.TokopediaProductID,
+		ShopeeProductID:    product.ShopeeProductID,
+	}
+
+	return productMessage
 }

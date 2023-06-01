@@ -6,8 +6,8 @@ CREATE TABLE "products" (
   "stock" int NOT NULL,
   "image" varchar NOT NULL,
   "description" text NOT NULL,
-  "tokopedia_id" int NOT NULL,
-  "shopee_id" int NOT NULL,
+  "tokopedia_product_id" int NOT NULL,
+  "shopee_product_id" int NOT NULL,
   "created_at" timestamp NOT NULL DEFAULT (now()),
   "updated_at" timestamp
 );
