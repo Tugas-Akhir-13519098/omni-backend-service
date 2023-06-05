@@ -28,8 +28,16 @@ type GetProductsResponse struct {
 	Pagination *util.Pagination
 }
 
+type Method int
+
+const (
+	CREATE Method = iota
+	UPDATE
+	DELETE
+)
+
 type ProductMessage struct {
-	Method             string
+	Method             Method
 	ID                 string
 	Name               string
 	Price              int

@@ -35,7 +35,7 @@ func (p *productRepository) CreateProduct(product *datastruct.Product) error {
 	}
 
 	// Change product to byte
-	productMessage := ConvertToProductMessage(product, "CREATE")
+	productMessage := ConvertToProductMessage(product, datastruct.CREATE)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ func (p *productRepository) UpdateProduct(product *datastruct.Product) error {
 	}
 
 	// Change product to byte
-	productMessage := ConvertToProductMessage(product, "UPDATE")
+	productMessage := ConvertToProductMessage(product, datastruct.UPDATE)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -114,7 +114,13 @@ func (p *productRepository) UpdateMarketplaceProductId(productID string, Tokoped
 		"updated_at":           time.Now(),
 	}
 
-	err := p.db.Model(&datastruct.Product{}).Where("name = ?", productID).
+	for key, value := range updatedProduct {
+		if value == 0 {
+			delete(updatedProduct, key)
+		}
+	}
+
+	err := p.db.Model(&datastruct.Product{}).Where("id = ?", productID).
 		Updates(updatedProduct).Error
 
 	if err != nil {
@@ -133,7 +139,7 @@ func (p *productRepository) DeleteProductByID(productID string) error {
 
 	// Change product to byte
 	product := &datastruct.Product{}
-	productMessage := ConvertToProductMessage(product, "DELETE")
+	productMessage := ConvertToProductMessage(product, datastruct.DELETE)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -157,7 +163,7 @@ func PublishMessage(writer *kafka.Writer, key string, message []byte) error {
 	return err
 }
 
-func ConvertToProductMessage(product *datastruct.Product, method string) *datastruct.ProductMessage {
+func ConvertToProductMessage(product *datastruct.Product, method datastruct.Method) *datastruct.ProductMessage {
 	productMessage := &datastruct.ProductMessage{
 		Method:             method,
 		ID:                 product.ID,
