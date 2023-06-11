@@ -7,6 +7,7 @@ import (
 
 type Product struct {
 	ID                 string
+	UserID             string
 	Name               string
 	Price              int
 	Weight             float32
@@ -21,6 +22,7 @@ type Product struct {
 
 type GetProductsRequest struct {
 	Pagination *util.Pagination
+	UserID     string
 }
 
 type GetProductsResponse struct {

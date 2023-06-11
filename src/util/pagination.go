@@ -78,7 +78,6 @@ func (p *Pagination) ValidatePagination() {
 		p.SetToDefault()
 		return
 	}
-	return
 }
 
 // SetToDefault to set default pagination
