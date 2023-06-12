@@ -1,7 +1,5 @@
 package model
 
-import "omnichannel-backend-service/src/util"
-
 type CreateProductRequest struct {
 	Name        string  `json:"name" binding:"required"`
 	Price       int     `json:"price" binding:"required"`
@@ -13,16 +11,6 @@ type CreateProductRequest struct {
 
 type CreateProductResponse struct {
 	ID string `json:"id" binding:"required"`
-}
-
-type GetProductsRequest struct {
-	Page     int `form:"page"`
-	PageSize int `form:"page_size"`
-}
-
-type GetProductsResponse struct {
-	Products   []*Product       `json:"products" binding:"required"`
-	Pagination *util.Pagination `json:"pagination" binding:"required"`
 }
 
 type UpdateMarketplaceProductID struct {

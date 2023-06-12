@@ -1,7 +1,7 @@
 package datastruct
 
 import (
-	"omnichannel-backend-service/src/util"
+	"omnichannel-backend-service/src/model"
 	"time"
 )
 
@@ -21,13 +21,13 @@ type Product struct {
 }
 
 type GetProductsRequest struct {
-	Pagination *util.Pagination
+	Pagination *model.Pagination
 	UserID     string
 }
 
 type GetProductsResponse struct {
 	Products   []*Product
-	Pagination *util.Pagination
+	Pagination *model.Pagination
 }
 
 type Method int

@@ -46,10 +46,13 @@ func main() {
 	writer := NewKafkaWriter(&cfg)
 
 	productRepository := repository.NewProductRepository(db, writer)
+	orderRepository := repository.NewOrderRepository(db)
 
 	productService := service.NewProductService(productRepository)
+	orderService := service.NewOrderService(orderRepository, productRepository)
 
 	productController := controller.NewProductController(productService)
+	orderController := controller.NewOrderController(orderService)
 
 	router := gin.Default()
 
@@ -57,13 +60,20 @@ func main() {
 	{
 		// product route
 		productRoute := v1.Group("/product")
-
 		productRoute.POST("/", productController.CreateProduct)
 		productRoute.GET("/:id", productController.GetProduct)
 		productRoute.GET("/", productController.GetProducts)
 		productRoute.PUT("/:id", productController.UpdateProduct)
 		productRoute.PUT("/marketplace/:id", productController.UpdateMarketplaceProductId)
 		productRoute.DELETE("/:id", productController.DeleteProduct)
+
+		// order route
+		orderRoute := v1.Group("/order")
+		orderRoute.POST("/", orderController.CreateNewOrder)
+		orderRoute.GET("/", orderController.GetOrders)
+		orderRoute.GET("/:id", orderController.GetOrderByID)
+		orderRoute.PUT("/", orderController.ChangeOrderStatus)
+		orderRoute.DELETE("/:id", orderController.DeleteOrderByID)
 	}
 
 	router.Run(fmt.Sprintf("%s:%d", cfg.RESTHost, cfg.RESTPort))

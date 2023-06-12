@@ -36,7 +36,7 @@ func (p *productController) CreateProduct(c *gin.Context) {
 	res, err := p.productService.CreateProduct(product)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
@@ -48,7 +48,7 @@ func (p *productController) GetProduct(c *gin.Context) {
 	res, err := p.productService.GetProduct(productID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
@@ -56,17 +56,10 @@ func (p *productController) GetProduct(c *gin.Context) {
 }
 
 func (p *productController) GetProducts(c *gin.Context) {
-	getProductsRequest := &model.GetProductsRequest{}
-	if err := c.ShouldBind(&getProductsRequest); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
-		return
-	}
-
-	res, err := p.productService.GetProducts(getProductsRequest)
+	res, err := p.productService.GetProducts()
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
@@ -78,14 +71,14 @@ func (p *productController) UpdateProduct(c *gin.Context) {
 	product.ID = c.Param("id")
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
 	err := p.productService.UpdateProduct(product)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
@@ -97,14 +90,14 @@ func (p *productController) UpdateMarketplaceProductId(c *gin.Context) {
 	product.ID = c.Param("id")
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
 	err := p.productService.UpdateMarketplaceProductId(product)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 
@@ -117,7 +110,7 @@ func (p *productController) DeleteProduct(c *gin.Context) {
 	err := p.productService.DeleteProduct(productID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
-		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 

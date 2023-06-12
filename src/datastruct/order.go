@@ -2,6 +2,15 @@ package datastruct
 
 import "time"
 
+type OrderStatus int
+
+const (
+	RECEIVED OrderStatus = iota
+	ACCEPTED
+	CANCELLED
+	DONE
+)
+
 type Order struct {
 	ID                 string
 	UserID             string
@@ -21,9 +30,13 @@ type Order struct {
 }
 
 type OrderProduct struct {
-	OrderID      string
-	ProductID    string
-	ProductName  string
-	ProductPrice float32
-	Quantity     int
+	OrderID         string
+	ProductID       string
+	ProductName     string
+	ProductPrice    float32
+	ProductQuantity int
+}
+
+type GetOrderProductResponse struct {
+	OrderProducts []*OrderProduct
 }

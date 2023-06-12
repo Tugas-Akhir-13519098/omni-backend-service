@@ -12,11 +12,12 @@ import (
 
 type ProductRepository interface {
 	CreateProduct(product *datastruct.Product) error
-	GetProducts(req *datastruct.GetProductsRequest) (*datastruct.GetProductsResponse, error)
+	GetProducts(userID string) ([]*datastruct.Product, error)
 	GetProductByID(productID string, userID string) (*datastruct.Product, error)
 	UpdateProduct(product *datastruct.Product) error
 	UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int, userID string) error
 	DeleteProductByID(productID string, userID string) error
+	GetProductByMarketplaceProductID(TokopediaProductID int, ShopeeProductID int, userID string) (*datastruct.Product, error)
 }
 
 type productRepository struct {
@@ -35,7 +36,7 @@ func (p *productRepository) CreateProduct(product *datastruct.Product) error {
 	}
 
 	// Change product to byte
-	productMessage := ConvertProductToProductMessage(product, datastruct.CREATE)
+	productMessage := util.ConvertProductToProductMessage(product, datastruct.CREATE)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -50,32 +51,19 @@ func (p *productRepository) CreateProduct(product *datastruct.Product) error {
 	return nil
 }
 
-func (p *productRepository) GetProducts(req *datastruct.GetProductsRequest) (*datastruct.GetProductsResponse, error) {
+func (p *productRepository) GetProducts(userID string) ([]*datastruct.Product, error) {
 	px := p.db.Model(&datastruct.Product{})
-	if req.UserID != "" {
-		px = px.Where("user_id = ?", req.UserID)
+	if userID != "" {
+		px = px.Where("user_id = ?", userID)
 	}
-
-	var total int64
-	err := px.Count(&total).Error
-	if err != nil {
-		return nil, err
-	}
-	req.Pagination.Total = int(total)
-	req.Pagination.SetPagination()
-
-	px = px.Offset(int(req.Pagination.GetOffset())).Limit(int(req.Pagination.PageSize))
 
 	var products []*datastruct.Product
-	err = px.Find(&products).Error
+	err := px.Find(&products).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return &datastruct.GetProductsResponse{
-		Products:   products,
-		Pagination: req.Pagination,
-	}, nil
+	return products, nil
 }
 
 func (p *productRepository) GetProductByID(productId string, userID string) (*datastruct.Product, error) {
@@ -95,7 +83,7 @@ func (p *productRepository) UpdateProduct(product *datastruct.Product) error {
 	}
 
 	// Change product to byte
-	productMessage := ConvertProductToProductMessage(product, datastruct.UPDATE)
+	productMessage := util.ConvertProductToProductMessage(product, datastruct.UPDATE)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -142,7 +130,7 @@ func (p *productRepository) DeleteProductByID(productID string, userID string) e
 
 	// Change product to byte
 	product := &datastruct.Product{}
-	productMessage := ConvertProductToProductMessage(product, datastruct.DELETE)
+	productMessage := util.ConvertProductToProductMessage(product, datastruct.DELETE)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -157,19 +145,17 @@ func (p *productRepository) DeleteProductByID(productID string, userID string) e
 	return nil
 }
 
-func ConvertProductToProductMessage(product *datastruct.Product, method datastruct.Method) *datastruct.ProductMessage {
-	productMessage := &datastruct.ProductMessage{
-		Method:             method,
-		ID:                 product.ID,
-		Name:               product.Name,
-		Price:              product.Price,
-		Weight:             product.Weight,
-		Stock:              product.Stock,
-		Image:              product.Image,
-		Description:        product.Description,
-		TokopediaProductID: product.TokopediaProductID,
-		ShopeeProductID:    product.ShopeeProductID,
+func (p *productRepository) GetProductByMarketplaceProductID(tokopediaID int, shopeeID int, userID string) (*datastruct.Product, error) {
+	var err error
+	var product *datastruct.Product
+
+	if tokopediaID != 0 {
+		err = p.db.Model(&datastruct.Product{}).Where("tokopedia_product_id = ? AND user_id = ?",
+			tokopediaID, userID).First(&product).Error
+	} else {
+		err = p.db.Model(&datastruct.Product{}).Where("shopee_product_id = ? AND user_id = ?",
+			shopeeID, userID).First(&product).Error
 	}
 
-	return productMessage
+	return product, err
 }

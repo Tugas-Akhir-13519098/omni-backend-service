@@ -36,7 +36,7 @@ CREATE TABLE "order_products" (
   "product_id" varchar,
   "product_name" varchar NOT NULL,
   "product_price" float NOT NULL,
-  "quantity" int NOT NULL,
+  "product_quantity" int NOT NULL,
   PRIMARY KEY ("order_id", "product_id")
 );
 

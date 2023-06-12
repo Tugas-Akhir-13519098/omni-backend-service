@@ -12,7 +12,7 @@ import (
 type ProductService interface {
 	CreateProduct(product *model.CreateProductRequest) (*model.CreateProductResponse, error)
 	GetProduct(productID string) (*model.Product, error)
-	GetProducts(req *model.GetProductsRequest) (*model.GetProductsResponse, error)
+	GetProducts() ([]*model.Product, error)
 	UpdateProduct(product *model.Product) error
 	UpdateMarketplaceProductId(req *model.UpdateMarketplaceProductID) error
 	DeleteProduct(productID string) error
@@ -55,35 +55,22 @@ func (p *productService) GetProduct(productID string) (*model.Product, error) {
 		return nil, err
 	}
 
-	return transformToProduct(product), nil
+	return util.TransformDatastructProductToModelProduct(product), nil
 }
 
-func (p *productService) GetProducts(req *model.GetProductsRequest) (*model.GetProductsResponse, error) {
+func (p *productService) GetProducts() ([]*model.Product, error) {
 	userID := "user1" //hardcoded
-	pagination := &util.Pagination{}
-	pagination.SetToDefault()
-	if req.Page > 0 && req.PageSize > 0 {
-		pagination.Page = req.Page
-		pagination.PageSize = req.PageSize
-	}
-
-	res, err := p.productRepository.GetProducts(&datastruct.GetProductsRequest{
-		Pagination: pagination,
-		UserID:     userID,
-	})
+	products, err := p.productRepository.GetProducts(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	var products []*model.Product
-	for _, t := range res.Products {
-		products = append(products, transformToProduct(t))
+	var result []*model.Product
+	for _, product := range products {
+		result = append(result, util.TransformDatastructProductToModelProduct(product))
 	}
 
-	return &model.GetProductsResponse{
-		Products:   products,
-		Pagination: res.Pagination,
-	}, err
+	return result, nil
 }
 
 func (p *productService) UpdateProduct(product *model.Product) error {
@@ -122,35 +109,4 @@ func (p *productService) DeleteProduct(productID string) error {
 	}
 
 	return nil
-}
-
-func transformToProduct(product *datastruct.Product) *model.Product {
-	return &model.Product{
-		ID:                 product.ID,
-		Name:               product.Name,
-		Price:              product.Price,
-		Weight:             product.Weight,
-		Stock:              product.Stock,
-		Image:              product.Image,
-		Description:        product.Description,
-		TokopediaProductID: product.TokopediaProductID,
-		ShopeeProductID:    product.ShopeeProductID,
-	}
-}
-
-func ConvertProductToProductMessage(product *datastruct.Product, method datastruct.Method) *datastruct.ProductMessage {
-	productMessage := &datastruct.ProductMessage{
-		Method:             method,
-		ID:                 product.ID,
-		Name:               product.Name,
-		Price:              product.Price,
-		Weight:             product.Weight,
-		Stock:              product.Stock,
-		Image:              product.Image,
-		Description:        product.Description,
-		TokopediaProductID: product.TokopediaProductID,
-		ShopeeProductID:    product.ShopeeProductID,
-	}
-
-	return productMessage
 }

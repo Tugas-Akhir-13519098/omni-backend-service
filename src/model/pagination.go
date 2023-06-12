@@ -1,4 +1,4 @@
-package util
+package model
 
 import (
 	"math"
@@ -16,10 +16,10 @@ type Pagination struct {
 	// total existing data in database
 	Total int `json:"total"`
 	// sort data in database
-	Orders []*Order `json:"-"`
+	Orders []*PaginationOrder `json:"-"`
 }
 
-type Order struct {
+type PaginationOrder struct {
 	ColumnName string
 	Direction  Direction
 }
@@ -93,7 +93,7 @@ func (p *Pagination) GetOffset() int {
 }
 
 // SetOrder single set order of pagination
-func (p *Pagination) SetOrder(order *Order) {
+func (p *Pagination) SetOrder(order *PaginationOrder) {
 	if order == nil {
 		return
 	}
@@ -101,7 +101,7 @@ func (p *Pagination) SetOrder(order *Order) {
 }
 
 // SetOrders of pagination
-func (p *Pagination) SetOrders(orders []*Order) {
+func (p *Pagination) SetOrders(orders []*PaginationOrder) {
 	if orders == nil {
 		return
 	}
