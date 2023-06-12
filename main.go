@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"omnichannel-backend-service/config"
-	"omnichannel-backend-service/src/controller"
-	"omnichannel-backend-service/src/repository"
-	"omnichannel-backend-service/src/service"
+	"omni-backend-service/config"
+	"omni-backend-service/src/controller"
+	"omni-backend-service/src/middleware"
+	"omni-backend-service/src/repository"
+	"omni-backend-service/src/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/segmentio/kafka-go"
@@ -55,24 +56,25 @@ func main() {
 	orderController := controller.NewOrderController(orderService)
 
 	router := gin.Default()
+	router.Use(middleware.CORS(&cfg))
 
 	v1 := router.Group("api/v1")
 	{
 		// product route
 		productRoute := v1.Group("/product")
-		productRoute.POST("/", productController.CreateProduct)
+		productRoute.POST("", productController.CreateProduct)
 		productRoute.GET("/:id", productController.GetProduct)
-		productRoute.GET("/", productController.GetProducts)
+		productRoute.GET("", productController.GetProducts)
 		productRoute.PUT("/:id", productController.UpdateProduct)
 		productRoute.PUT("/marketplace/:id", productController.UpdateMarketplaceProductId)
 		productRoute.DELETE("/:id", productController.DeleteProduct)
 
 		// order route
 		orderRoute := v1.Group("/order")
-		orderRoute.POST("/", orderController.CreateNewOrder)
-		orderRoute.GET("/", orderController.GetOrders)
-		orderRoute.GET("/:id", orderController.GetOrderByID)
-		orderRoute.PUT("/", orderController.ChangeOrderStatus)
+		orderRoute.POST("", orderController.CreateNewOrder)
+		orderRoute.GET("", orderController.GetOrders)
+		orderRoute.GET(":id", orderController.GetOrderByID)
+		orderRoute.PUT("", orderController.ChangeOrderStatus)
 		orderRoute.DELETE("/:id", orderController.DeleteOrderByID)
 	}
 

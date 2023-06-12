@@ -1,10 +1,10 @@
 package service
 
 import (
-	"omnichannel-backend-service/src/datastruct"
-	"omnichannel-backend-service/src/model"
-	"omnichannel-backend-service/src/repository"
-	"omnichannel-backend-service/src/util"
+	"omni-backend-service/src/datastruct"
+	"omni-backend-service/src/model"
+	"omni-backend-service/src/repository"
+	"omni-backend-service/src/util"
 
 	"github.com/google/uuid"
 )

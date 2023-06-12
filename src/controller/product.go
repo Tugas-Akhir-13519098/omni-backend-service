@@ -2,8 +2,8 @@ package controller
 
 import (
 	"net/http"
-	"omnichannel-backend-service/src/model"
-	"omnichannel-backend-service/src/service"
+	"omni-backend-service/src/model"
+	"omni-backend-service/src/service"
 
 	"github.com/gin-gonic/gin"
 )

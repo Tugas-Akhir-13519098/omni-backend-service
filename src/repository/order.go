@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"omnichannel-backend-service/src/datastruct"
+	"omni-backend-service/src/datastruct"
 
 	"gorm.io/gorm"
 )

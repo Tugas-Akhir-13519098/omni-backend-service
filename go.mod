@@ -1,4 +1,4 @@
-module omnichannel-backend-service
+module omni-backend-service
 
 go 1.20
 

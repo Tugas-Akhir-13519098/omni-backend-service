@@ -2,8 +2,8 @@ package repository
 
 import (
 	"encoding/json"
-	"omnichannel-backend-service/src/datastruct"
-	"omnichannel-backend-service/src/util"
+	"omni-backend-service/src/datastruct"
+	"omni-backend-service/src/util"
 	"time"
 
 	"github.com/segmentio/kafka-go"

@@ -7,6 +7,8 @@ import (
 type Config struct {
 	RESTHost string `envconfig:"REST_HOST" default:"localhost"`
 	RESTPort int    `envconfig:"REST_PORT" default:"8080"`
+	ClientHost string`envconfig:"CLIENT_HOST" default:"localhost"`
+	ClientPort int    `envconfig:"REST_PORT" default:"3000"`
 
 	DBHost     string `envconfig:"DB_HOST" default:"localhost"`
 	DBPort     int    `envconfig:"DB_PORT" default:"5433"`

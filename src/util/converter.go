@@ -1,8 +1,8 @@
 package util
 
 import (
-	"omnichannel-backend-service/src/datastruct"
-	"omnichannel-backend-service/src/model"
+	"omni-backend-service/src/datastruct"
+	"omni-backend-service/src/model"
 )
 
 func ConvertDatastructProductToModelProduct(product *datastruct.Product) *model.Product {
