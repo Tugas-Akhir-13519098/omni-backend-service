@@ -1,4 +1,4 @@
-# Omnichannel Backend Service
+# OMNI Backend Service
 
 ## Requirements
 1. Go
