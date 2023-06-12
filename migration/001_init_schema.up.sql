@@ -59,5 +59,3 @@ ALTER TABLE "products" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
 ALTER TABLE "order_products" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
-
-ALTER TABLE "order_products" ADD FOREIGN KEY ("product_id") REFERENCES "products" ("id");

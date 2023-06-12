@@ -55,7 +55,7 @@ func (p *productService) GetProduct(productID string) (*model.Product, error) {
 		return nil, err
 	}
 
-	return util.TransformDatastructProductToModelProduct(product), nil
+	return util.ConvertDatastructProductToModelProduct(product), nil
 }
 
 func (p *productService) GetProducts() ([]*model.Product, error) {
@@ -67,7 +67,7 @@ func (p *productService) GetProducts() ([]*model.Product, error) {
 
 	var result []*model.Product
 	for _, product := range products {
-		result = append(result, util.TransformDatastructProductToModelProduct(product))
+		result = append(result, util.ConvertDatastructProductToModelProduct(product))
 	}
 
 	return result, nil

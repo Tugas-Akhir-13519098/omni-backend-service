@@ -5,7 +5,7 @@ import (
 	"omnichannel-backend-service/src/model"
 )
 
-func TransformDatastructProductToModelProduct(product *datastruct.Product) *model.Product {
+func ConvertDatastructProductToModelProduct(product *datastruct.Product) *model.Product {
 	return &model.Product{
 		ID:                 product.ID,
 		Name:               product.Name,
@@ -36,7 +36,29 @@ func ConvertProductToProductMessage(product *datastruct.Product, method datastru
 	return productMessage
 }
 
-func ConvertOrderAndOrderProductToModelOrder(order *datastruct.Order, orderProducts *datastruct.GetOrderProductResponse) *model.Order {
+func ConvertCreateOrderRequestToOrderDatastruct(order *model.CreateOrderRequest, ID string, userID string) *datastruct.Order {
+	status := []string{"RECEIVED", "ACCEPTED", "CANCELLED", "DONE"}
+	orderData := &datastruct.Order{
+		ID:                 ID,
+		UserID:             userID,
+		TotalPrice:         order.TotalPrice,
+		TokopediaOrderID:   order.TokopediaOrderID,
+		ShopeeOrderID:      order.ShopeeOrderID,
+		CustomerName:       order.Customer.CustomerName,
+		CustomerPhone:      order.Customer.CustomerPhone,
+		CustomerAddress:    order.Customer.CustomerAddress,
+		CustomerDistrict:   order.Customer.CustomerDistrict,
+		CustomerCity:       order.Customer.CustomerCity,
+		CustomerProvince:   order.Customer.CustomerProvince,
+		CustomerCountry:    order.Customer.CustomerCountry,
+		CustomerPostalCode: order.Customer.CustomerPostalCode,
+		OrderStatus:        status[order.OrderStatus],
+	}
+
+	return orderData
+}
+
+func ConvertOrderAndOrderProductToModelOrder(order *datastruct.Order, orderProducts *datastruct.GetOrderProductResponse) *model.GetOrderResponse {
 	customer := model.Customer{
 		CustomerName:       order.CustomerName,
 		CustomerPhone:      order.CustomerPhone,
@@ -49,7 +71,7 @@ func ConvertOrderAndOrderProductToModelOrder(order *datastruct.Order, orderProdu
 	}
 
 	modelOrderProducts := ConvertDatastructOrderProductsToModelOderProducts(orderProducts)
-	modelOrder := &model.Order{
+	modelOrder := &model.GetOrderResponse{
 		ID:               order.ID,
 		TotalPrice:       order.TotalPrice,
 		TokopediaOrderID: order.TokopediaOrderID,

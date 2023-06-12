@@ -11,8 +11,8 @@ import (
 
 type OrderService interface {
 	CreateNewOrder(order *model.CreateOrderRequest) (*model.CreateOrderResponse, error)
-	GetOrders() ([]*model.Order, error)
-	GetOrderByID(orderID string) (*model.Order, error)
+	GetOrders() ([]*model.GetOrderResponse, error)
+	GetOrderByID(orderID string) (*model.GetOrderResponse, error)
 	ChangeOrderStatus(order *model.UpdateOrderStatusRequest) error
 	DeleteOrderByID(orderID string) error
 }
@@ -29,25 +29,9 @@ func NewOrderService(orderRepository repository.OrderRepository, productReposito
 func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.CreateOrderResponse, error) {
 	userID := "user1" //hardcoded
 	ID := uuid.New().String()
-	status := []string{"RECEIVED", "ACCEPTED", "CANCELLED", "DONE"}
 
 	// Create Order
-	orderData := &datastruct.Order{
-		ID:                 ID,
-		UserID:             userID,
-		TotalPrice:         order.TotalPrice,
-		TokopediaOrderID:   order.TokopediaOrderID,
-		ShopeeOrderID:      order.ShopeeOrderID,
-		CustomerName:       order.CustomerName,
-		CustomerPhone:      order.CustomerPhone,
-		CustomerAddress:    order.CustomerAddress,
-		CustomerDistrict:   order.CustomerDistrict,
-		CustomerCity:       order.CustomerCity,
-		CustomerProvince:   order.CustomerProvince,
-		CustomerCountry:    order.CustomerCountry,
-		CustomerPostalCode: order.CustomerPostalCode,
-		OrderStatus:        status[order.OrderStatus],
-	}
+	orderData := util.ConvertCreateOrderRequestToOrderDatastruct(order, ID, userID)
 	err := o.orderRepository.CreateOrder(orderData)
 	if err != nil {
 		return nil, err
@@ -79,9 +63,9 @@ func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.C
 	return &model.CreateOrderResponse{ID: ID}, nil
 }
 
-func (o *orderService) GetOrders() ([]*model.Order, error) {
+func (o *orderService) GetOrders() ([]*model.GetOrderResponse, error) {
 	userID := "user1" //hardcoded
-	var result []*model.Order
+	var result []*model.GetOrderResponse
 	orders, err := o.orderRepository.GetOrders(userID)
 	if err != nil {
 		return nil, err
@@ -98,7 +82,7 @@ func (o *orderService) GetOrders() ([]*model.Order, error) {
 	return result, nil
 }
 
-func (o *orderService) GetOrderByID(orderID string) (*model.Order, error) {
+func (o *orderService) GetOrderByID(orderID string) (*model.GetOrderResponse, error) {
 	userID := "user1" //hardcoded
 	order, err := o.orderRepository.GetOrderByID(orderID, userID)
 	if err != nil {

@@ -109,7 +109,7 @@ func (o *orderRepository) CreateOrderProduct(orderProduct *datastruct.OrderProdu
 }
 
 func (o *orderRepository) GetOrderProductsByOrderID(orderID string) (*datastruct.GetOrderProductResponse, error) {
-	ox := o.db.Model(&datastruct.OrderProduct{})
+	ox := o.db.Model(&datastruct.OrderProduct{}).Where("order_id = ? ", orderID)
 
 	var orderProducts []*datastruct.OrderProduct
 	err := ox.Find(&orderProducts).Error
