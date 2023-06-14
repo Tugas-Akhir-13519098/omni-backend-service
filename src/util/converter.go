@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"omni-backend-service/src/datastruct"
 	"omni-backend-service/src/model"
 )
@@ -69,6 +70,9 @@ func ConvertOrderAndOrderProductToModelOrder(order *datastruct.Order, orderProdu
 		CustomerCountry:    order.CustomerCountry,
 		CustomerPostalCode: order.CustomerPostalCode,
 	}
+	time := order.CreatedAt
+	createdAt := fmt.Sprintf("%d-%d-%d %d:%d:%d", time.Day(), time.Month(), time.Year(),
+		time.Hour(), time.Minute(), time.Second())
 
 	modelOrderProducts := ConvertDatastructOrderProductsToModelOderProducts(orderProducts)
 	modelOrder := &model.GetOrderResponse{
@@ -79,6 +83,7 @@ func ConvertOrderAndOrderProductToModelOrder(order *datastruct.Order, orderProdu
 		Customer:         customer,
 		OrderStatus:      order.OrderStatus,
 		Products:         modelOrderProducts,
+		CreatedAt:        createdAt,
 	}
 
 	return modelOrder
