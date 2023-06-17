@@ -11,6 +11,7 @@ const (
 )
 
 type CreateOrderRequest struct {
+	UserID           string                `json:"user_id"`
 	TokopediaOrderID int                   `json:"tokopedia_order_id"`
 	ShopeeOrderID    string                `json:"shopee_order_id"`
 	TotalPrice       float32               `json:"total_price"`
@@ -43,6 +44,7 @@ type CreateOrderResponse struct {
 }
 
 type UpdateOrderStatusRequest struct {
+	UserID           string      `json:"user_id"`
 	TokopediaOrderID int         `json:"tokopedia_order_id"`
 	ShopeeOrderID    string      `json:"shopee_order_id"`
 	OrderStatus      OrderStatus `json:"order_status"`

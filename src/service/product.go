@@ -11,11 +11,11 @@ import (
 
 type ProductService interface {
 	CreateProduct(product *model.CreateProductRequest) (*model.CreateProductResponse, error)
-	GetProduct(productID string) (*model.Product, error)
-	GetProducts() ([]*model.Product, error)
+	GetProduct(productID string, userID string) (*model.Product, error)
+	GetProducts(userID string) ([]*model.Product, error)
 	UpdateProduct(product *model.Product) error
 	UpdateMarketplaceProductId(req *model.UpdateMarketplaceProductID) error
-	DeleteProduct(productID string) error
+	DeleteProduct(productID string, userID string) error
 }
 
 type productService struct {
@@ -27,11 +27,10 @@ func NewProductService(productRepository repository.ProductRepository) ProductSe
 }
 
 func (p *productService) CreateProduct(product *model.CreateProductRequest) (*model.CreateProductResponse, error) {
-	userID := "user1" //hardcoded
 	ID := uuid.New().String()
 	productData := &datastruct.Product{
 		ID:          ID,
-		UserID:      userID,
+		UserID:      product.UserID,
 		Name:        product.Name,
 		Price:       product.Price,
 		Weight:      product.Weight,
@@ -48,8 +47,7 @@ func (p *productService) CreateProduct(product *model.CreateProductRequest) (*mo
 	return &model.CreateProductResponse{ID: ID}, nil
 }
 
-func (p *productService) GetProduct(productID string) (*model.Product, error) {
-	userID := "user1" //hardcoded
+func (p *productService) GetProduct(productID string, userID string) (*model.Product, error) {
 	product, err := p.productRepository.GetProductByID(productID, userID)
 	if err != nil {
 		return nil, err
@@ -58,8 +56,7 @@ func (p *productService) GetProduct(productID string) (*model.Product, error) {
 	return util.ConvertDatastructProductToModelProduct(product), nil
 }
 
-func (p *productService) GetProducts() ([]*model.Product, error) {
-	userID := "user1" //hardcoded
+func (p *productService) GetProducts(userID string) ([]*model.Product, error) {
 	products, err := p.productRepository.GetProducts(userID)
 	if err != nil {
 		return nil, err
@@ -74,10 +71,9 @@ func (p *productService) GetProducts() ([]*model.Product, error) {
 }
 
 func (p *productService) UpdateProduct(product *model.Product) error {
-	userID := "user1" //hardcoded
 	err := p.productRepository.UpdateProduct(&datastruct.Product{
 		ID:          product.ID,
-		UserID:      userID,
+		UserID:      product.UserID,
 		Name:        product.Name,
 		Price:       product.Price,
 		Weight:      product.Weight,
@@ -93,16 +89,14 @@ func (p *productService) UpdateProduct(product *model.Product) error {
 }
 
 func (p *productService) UpdateMarketplaceProductId(req *model.UpdateMarketplaceProductID) error {
-	userID := "user1" //hardcoded
-	err := p.productRepository.UpdateMarketplaceProductId(req.ID, req.TokopediaProductID, req.ShopeeProductID, userID)
+	err := p.productRepository.UpdateMarketplaceProductId(req.ID, req.TokopediaProductID, req.ShopeeProductID, req.UserID)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (p *productService) DeleteProduct(productID string) error {
-	userID := "user1" //hardcoded
+func (p *productService) DeleteProduct(productID string, userID string) error {
 	err := p.productRepository.DeleteProductByID(productID, userID)
 	if err != nil {
 		return err

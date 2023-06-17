@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"omni-backend-service/config"
 	"omni-backend-service/src/controller"
@@ -8,8 +9,11 @@ import (
 	"omni-backend-service/src/repository"
 	"omni-backend-service/src/service"
 
+	firebase "firebase.google.com/go"
+	"firebase.google.com/go/auth"
 	"github.com/gin-gonic/gin"
 	"github.com/segmentio/kafka-go"
+	"google.golang.org/api/option"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -34,6 +38,26 @@ func NewKafkaWriter(cfg *config.Config) *kafka.Writer {
 	return writer
 }
 
+func NewFirebaseApp(cfg *config.Config) (*firebase.App, error) {
+
+	opt := option.WithCredentialsFile(cfg.FirebaseKeyPath)
+	app, err := firebase.NewApp(context.Background(), nil, opt)
+	if err != nil {
+		panic(fmt.Sprintf("firebase initiation failed err=%s\n", err))
+	}
+
+	return app, nil
+}
+
+func NewAuthClient(cfg *config.Config, app *firebase.App) (*auth.Client, error) {
+	client, err := app.Auth(context.Background())
+	if err != nil {
+		panic(fmt.Sprintf("firebase auth client initiation failed err=%s\n", err))
+	}
+
+	return client, nil
+}
+
 func main() {
 	cfg := config.Get()
 
@@ -46,20 +70,41 @@ func main() {
 	// kafka
 	writer := NewKafkaWriter(&cfg)
 
+	// firebase
+	app, err := NewFirebaseApp(&cfg)
+	if err != nil {
+		panic(fmt.Sprintf("cannot create firebase app: %v", err))
+	}
+
+	auth, err := NewAuthClient(&cfg, app)
+	if err != nil {
+		panic(fmt.Sprintf("cannot create auth client: %v", err))
+	}
+
+	userRepository := repository.NewUserRepository(db)
 	productRepository := repository.NewProductRepository(db, writer)
 	orderRepository := repository.NewOrderRepository(db)
 
+	userService := service.NewUserService(userRepository)
 	productService := service.NewProductService(productRepository)
 	orderService := service.NewOrderService(orderRepository, productRepository)
 
+	userController := controller.NewUserController(userService)
 	productController := controller.NewProductController(productService)
 	orderController := controller.NewOrderController(orderService)
 
 	router := gin.Default()
+	router.Use(middleware.ErrorHandler)
 	router.Use(middleware.CORS(&cfg))
 
 	v1 := router.Group("api/v1")
 	{
+		// user route
+		v1.Use(middleware.Authentication(auth))
+		v1.POST("/register", userController.Register)
+		v1.POST("/login", userController.Login)
+		v1.GET("/user", userController.GetUser)
+
 		// product route
 		productRoute := v1.Group("/product")
 		productRoute.POST("", productController.CreateProduct)

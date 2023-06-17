@@ -11,10 +11,10 @@ import (
 
 type OrderService interface {
 	CreateNewOrder(order *model.CreateOrderRequest) (*model.CreateOrderResponse, error)
-	GetOrders() ([]*model.GetOrderResponse, error)
-	GetOrderByID(orderID string) (*model.GetOrderResponse, error)
+	GetOrders(userID string) ([]*model.GetOrderResponse, error)
+	GetOrderByID(orderID string, userID string) (*model.GetOrderResponse, error)
 	ChangeOrderStatus(order *model.UpdateOrderStatusRequest) error
-	DeleteOrderByID(orderID string) error
+	DeleteOrderByID(orderID string, userID string) error
 }
 
 type orderService struct {
@@ -27,11 +27,10 @@ func NewOrderService(orderRepository repository.OrderRepository, productReposito
 }
 
 func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.CreateOrderResponse, error) {
-	userID := "user1" //hardcoded
 	ID := uuid.New().String()
 
 	// Create Order
-	orderData := util.ConvertCreateOrderRequestToOrderDatastruct(order, ID, userID)
+	orderData := util.ConvertCreateOrderRequestToOrderDatastruct(order, ID, order.UserID)
 	err := o.orderRepository.CreateOrder(orderData)
 	if err != nil {
 		return nil, err
@@ -39,7 +38,7 @@ func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.C
 
 	// Create Order Product
 	for _, op := range order.Products {
-		product, _ := o.productRepository.GetProductByMarketplaceProductID(op.TokopediaProductID, op.ShopeeProductID, userID)
+		product, _ := o.productRepository.GetProductByMarketplaceProductID(op.TokopediaProductID, op.ShopeeProductID, order.UserID)
 		orderProduct := &datastruct.OrderProduct{
 			OrderID:         ID,
 			ProductID:       product.ID,
@@ -63,8 +62,7 @@ func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.C
 	return &model.CreateOrderResponse{ID: ID}, nil
 }
 
-func (o *orderService) GetOrders() ([]*model.GetOrderResponse, error) {
-	userID := "user1" //hardcoded
+func (o *orderService) GetOrders(userID string) ([]*model.GetOrderResponse, error) {
 	var result []*model.GetOrderResponse
 	orders, err := o.orderRepository.GetOrders(userID)
 	if err != nil {
@@ -82,8 +80,7 @@ func (o *orderService) GetOrders() ([]*model.GetOrderResponse, error) {
 	return result, nil
 }
 
-func (o *orderService) GetOrderByID(orderID string) (*model.GetOrderResponse, error) {
-	userID := "user1" //hardcoded
+func (o *orderService) GetOrderByID(orderID string, userID string) (*model.GetOrderResponse, error) {
 	order, err := o.orderRepository.GetOrderByID(orderID, userID)
 	if err != nil {
 		return nil, err
@@ -100,9 +97,8 @@ func (o *orderService) GetOrderByID(orderID string) (*model.GetOrderResponse, er
 }
 
 func (o *orderService) ChangeOrderStatus(order *model.UpdateOrderStatusRequest) error {
-	userID := "user1" //hardcoded
 	status := []string{"RECEIVED", "ACCEPTED", "CANCELLED", "DONE"}
-	err := o.orderRepository.ChangeOrderStatus(order.TokopediaOrderID, order.ShopeeOrderID, status[order.OrderStatus], userID)
+	err := o.orderRepository.ChangeOrderStatus(order.TokopediaOrderID, order.ShopeeOrderID, status[order.OrderStatus], order.UserID)
 	if err != nil {
 		return err
 	}
@@ -110,8 +106,7 @@ func (o *orderService) ChangeOrderStatus(order *model.UpdateOrderStatusRequest) 
 	return nil
 }
 
-func (o *orderService) DeleteOrderByID(orderID string) error {
-	userID := "user1" //hardcoded
+func (o *orderService) DeleteOrderByID(orderID string, userID string) error {
 	err := o.orderRepository.DeleteOrderByID(orderID, userID)
 	if err != nil {
 		return err

@@ -42,6 +42,7 @@ CREATE TABLE "order_products" (
 
 CREATE TABLE "users" (
   "id" varchar PRIMARY KEY,
+  "email" varchar UNIQUE NOT NULL,
   "shop_name" varchar NOT NULL,
   "tokopedia_fs_id" int NOT NULL,
   "tokopedia_shop_id" int NOT NULL,

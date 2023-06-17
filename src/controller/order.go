@@ -32,6 +32,7 @@ func (o *orderController) CreateNewOrder(c *gin.Context) {
 		return
 	}
 
+	order.UserID = c.GetString("userID")
 	res, err := o.orderService.CreateNewOrder(order)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -43,7 +44,8 @@ func (o *orderController) CreateNewOrder(c *gin.Context) {
 }
 
 func (o *orderController) GetOrders(c *gin.Context) {
-	res, err := o.orderService.GetOrders()
+	userID := c.GetString("userID")
+	res, err := o.orderService.GetOrders(userID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
@@ -55,7 +57,8 @@ func (o *orderController) GetOrders(c *gin.Context) {
 
 func (o *orderController) GetOrderByID(c *gin.Context) {
 	orderID := c.Param("id")
-	res, err := o.orderService.GetOrderByID(orderID)
+	userID := c.GetString("userID")
+	res, err := o.orderService.GetOrderByID(orderID, userID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
@@ -73,6 +76,7 @@ func (o *orderController) ChangeOrderStatus(c *gin.Context) {
 		return
 	}
 
+	order.UserID = c.GetString("userID")
 	err := o.orderService.ChangeOrderStatus(order)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -85,7 +89,8 @@ func (o *orderController) ChangeOrderStatus(c *gin.Context) {
 
 func (o *orderController) DeleteOrderByID(c *gin.Context) {
 	orderID := c.Param("id")
-	err := o.orderService.DeleteOrderByID(orderID)
+	userID := c.GetString("userID")
+	err := o.orderService.DeleteOrderByID(orderID, userID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		c.JSON(http.StatusCreated, gin.H{"message": err.Error(), "status": "failed"})

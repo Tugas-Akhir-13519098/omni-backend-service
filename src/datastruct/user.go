@@ -2,6 +2,7 @@ package datastruct
 
 type User struct {
 	ID                   string
+	Email                string
 	ShopName             string
 	TokopediaFsID        int
 	TokopediaShopID      int

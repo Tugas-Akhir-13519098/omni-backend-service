@@ -19,6 +19,8 @@ type Config struct {
 	KafkaHost         string `envconfig:"KAFKA_HOST" default:"localhost"`
 	KafkaPort         string `envconfig:"KAFKA_PORT" default:"9092"`
 	KafkaProductTopic string `envconfig:"KAFKA_PRODUCT_TOPIC" default:"product"`
+
+	FirebaseKeyPath           string `envconfig:"FIREBASE_KEY_PATH" default:"config/firebase-key.json"`
 }
 
 // Get to get defined configuration
