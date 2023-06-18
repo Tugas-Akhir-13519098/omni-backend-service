@@ -10,13 +10,14 @@ import (
 )
 
 const (
-	COOKIE_DURATION = int(12 * time.Hour)
+	COOKIE_DURATION = int(1 * time.Hour)
 )
 
 type AuthController interface {
 	Register(c *gin.Context)
 	Login(c *gin.Context)
 	GetUser(c *gin.Context)
+	UpdateUser(c *gin.Context)
 }
 
 type userController struct {
@@ -44,7 +45,7 @@ func (u *userController) Register(c *gin.Context) {
 	}
 
 	jwt := c.GetString("jwt")
-	c.SetCookie("jwt", jwt, COOKIE_DURATION, "/", "", false, true)
+	c.SetCookie("jwt", jwt, COOKIE_DURATION, "/", "", false, false)
 
 	c.JSON(http.StatusCreated, gin.H{"status": "success"})
 }
@@ -59,7 +60,7 @@ func (u *userController) Login(c *gin.Context) {
 	}
 
 	jwt := c.GetString("jwt")
-	c.SetCookie("jwt", jwt, COOKIE_DURATION, "/", "", false, true)
+	c.SetCookie("jwt", jwt, COOKIE_DURATION, "/", "", false, false)
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
@@ -72,7 +73,7 @@ func (u *userController) GetUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": user, "status": "success"})
+	c.JSON(http.StatusOK, gin.H{"data": user, "status": "success"})
 }
 
 func (u *userController) UpdateUser(c *gin.Context) {

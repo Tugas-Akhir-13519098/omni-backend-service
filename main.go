@@ -104,6 +104,7 @@ func main() {
 		v1.POST("/register", userController.Register)
 		v1.POST("/login", userController.Login)
 		v1.GET("/user", userController.GetUser)
+		v1.PUT("/user", userController.UpdateUser)
 
 		// product route
 		productRoute := v1.Group("/product")
