@@ -9,8 +9,8 @@ import (
 type OrderRepository interface {
 	CreateOrder(order *datastruct.Order) error
 	GetOrders(userID string) ([]*datastruct.Order, error)
-	GetOrderByID(orderID string, userID string) (*datastruct.Order, error)
-	ChangeOrderStatus(tokopediaID int, shopeeID string, orderStatus string, userID string) error
+	GetOrderByID(orderID string) (*datastruct.Order, error)
+	ChangeOrderStatus(tokopediaID int, shopeeID string, orderStatus string) error
 	DeleteOrderByID(orderID string, userID string) error
 	CreateOrderProduct(orderProduct *datastruct.OrderProduct) error
 	GetOrderProductsByOrderID(orderID string) (*datastruct.GetOrderProductResponse, error)
@@ -48,9 +48,9 @@ func (o *orderRepository) GetOrders(userID string) ([]*datastruct.Order, error) 
 	return orders, nil
 }
 
-func (o *orderRepository) GetOrderByID(orderID string, userID string) (*datastruct.Order, error) {
+func (o *orderRepository) GetOrderByID(orderID string) (*datastruct.Order, error) {
 	var order *datastruct.Order
-	err := o.db.Model(&datastruct.Order{}).Where("id = ? AND user_id = ?", orderID, userID).First(&order).Error
+	err := o.db.Model(&datastruct.Order{}).Where("id = ?", orderID).First(&order).Error
 	if err != nil {
 		return nil, err
 	}
@@ -58,14 +58,14 @@ func (o *orderRepository) GetOrderByID(orderID string, userID string) (*datastru
 	return order, nil
 }
 
-func (o *orderRepository) ChangeOrderStatus(tokopediaID int, shopeeID string, orderStatus string, userID string) error {
+func (o *orderRepository) ChangeOrderStatus(tokopediaID int, shopeeID string, orderStatus string) error {
 	var err error
 
 	if tokopediaID != 0 {
-		err = o.db.Model(&datastruct.Order{}).Where("tokopedia_order_id = ? AND user_id = ?", tokopediaID, userID).
+		err = o.db.Model(&datastruct.Order{}).Where("tokopedia_order_id = ?", tokopediaID).
 			Update("order_status", orderStatus).Error
 	} else {
-		err = o.db.Model(&datastruct.Order{}).Where("shopee_order_id = ? AND user_id = ?", shopeeID, userID).
+		err = o.db.Model(&datastruct.Order{}).Where("shopee_order_id = ?", shopeeID).
 			Update("order_status", orderStatus).Error
 	}
 

@@ -32,7 +32,6 @@ func (o *orderController) CreateNewOrder(c *gin.Context) {
 		return
 	}
 
-	order.UserID = c.GetString("userID")
 	res, err := o.orderService.CreateNewOrder(order)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
@@ -57,8 +56,7 @@ func (o *orderController) GetOrders(c *gin.Context) {
 
 func (o *orderController) GetOrderByID(c *gin.Context) {
 	orderID := c.Param("id")
-	userID := c.GetString("userID")
-	res, err := o.orderService.GetOrderByID(orderID, userID)
+	res, err := o.orderService.GetOrderByID(orderID)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
@@ -76,7 +74,6 @@ func (o *orderController) ChangeOrderStatus(c *gin.Context) {
 		return
 	}
 
-	order.UserID = c.GetString("userID")
 	err := o.orderService.ChangeOrderStatus(order)
 	if err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
