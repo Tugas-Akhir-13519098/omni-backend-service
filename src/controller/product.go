@@ -92,7 +92,6 @@ func (p *productController) UpdateProduct(c *gin.Context) {
 func (p *productController) UpdateMarketplaceProductId(c *gin.Context) {
 	product := &model.UpdateMarketplaceProductID{}
 	product.ID = c.Param("id")
-	product.UserID = c.GetString("userID")
 	if err := c.ShouldBindJSON(&product); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error(), "status": "failed"})

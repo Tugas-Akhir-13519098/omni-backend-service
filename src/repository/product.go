@@ -15,7 +15,7 @@ type ProductRepository interface {
 	GetProducts(userID string) ([]*datastruct.Product, error)
 	GetProductByID(productID string, userID string) (*datastruct.Product, error)
 	UpdateProduct(product *datastruct.Product) error
-	UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int, userID string) error
+	UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int) error
 	DeleteProductByID(productID string, userID string) error
 	GetProductByMarketplaceProductID(TokopediaProductID int, ShopeeProductID int, userID string) (*datastruct.Product, error)
 }
@@ -98,7 +98,7 @@ func (p *productRepository) UpdateProduct(product *datastruct.Product) error {
 	return nil
 }
 
-func (p *productRepository) UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int, userID string) error {
+func (p *productRepository) UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int) error {
 	updatedProduct := map[string]interface{}{
 		"tokopedia_product_id": TokopediaProductID,
 		"shopee_product_id":    ShopeeProductID,
@@ -111,7 +111,7 @@ func (p *productRepository) UpdateMarketplaceProductId(productID string, Tokoped
 		}
 	}
 
-	err := p.db.Model(&datastruct.Product{}).Where("id = ? AND user_id = ?", productID, userID).
+	err := p.db.Model(&datastruct.Product{}).Where("id = ?", productID).
 		Updates(updatedProduct).Error
 
 	if err != nil {

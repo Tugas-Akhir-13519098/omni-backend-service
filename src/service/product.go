@@ -89,7 +89,7 @@ func (p *productService) UpdateProduct(product *model.Product) error {
 }
 
 func (p *productService) UpdateMarketplaceProductId(req *model.UpdateMarketplaceProductID) error {
-	err := p.productRepository.UpdateMarketplaceProductId(req.ID, req.TokopediaProductID, req.ShopeeProductID, req.UserID)
+	err := p.productRepository.UpdateMarketplaceProductId(req.ID, req.TokopediaProductID, req.ShopeeProductID)
 	if err != nil {
 		return err
 	}

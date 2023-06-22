@@ -16,7 +16,6 @@ type CreateProductResponse struct {
 
 type UpdateMarketplaceProductID struct {
 	ID                 string `json:"id" binding:"required"`
-	UserID             string `json:"user_id" binding:"required"`
 	TokopediaProductID int    `json:"tokopedia_product_id"`
 	ShopeeProductID    int    `json:"shopee_product_id"`
 }
