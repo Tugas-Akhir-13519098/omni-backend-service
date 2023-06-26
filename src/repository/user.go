@@ -10,7 +10,7 @@ type UserRepository interface {
 	CreateUser(user *datastruct.User) error
 	GetUserByID(userID string) (*datastruct.User, error)
 	UpdateUser(user *datastruct.User) error
-	GetuserIDByShopID(tokopediaShopID int, shopeeShopID int) (string, error)
+	GetUserByShopID(tokopediaShopID int, shopeeShopID int) (*datastruct.User, error)
 }
 
 type userRepository struct {
@@ -43,7 +43,7 @@ func (u *userRepository) UpdateUser(user *datastruct.User) error {
 	return err
 }
 
-func (u *userRepository) GetuserIDByShopID(tokopediaShopID int, shopeeShopID int) (string, error) {
+func (u *userRepository) GetUserByShopID(tokopediaShopID int, shopeeShopID int) (*datastruct.User, error) {
 	var user *datastruct.User
 	var err error
 	if tokopediaShopID != 0 {
@@ -52,5 +52,5 @@ func (u *userRepository) GetuserIDByShopID(tokopediaShopID int, shopeeShopID int
 		err = u.db.Model(&datastruct.User{}).Where("shopee_shop_id = ?", shopeeShopID).First(&user).Error
 	}
 
-	return user.ID, err
+	return user, err
 }

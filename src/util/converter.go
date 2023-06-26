@@ -20,18 +20,25 @@ func ConvertDatastructProductToModelProduct(product *datastruct.Product) *model.
 	}
 }
 
-func ConvertProductToProductMessage(product *datastruct.Product, method datastruct.Method) *datastruct.ProductMessage {
-	productMessage := &datastruct.ProductMessage{
-		Method:             method,
-		ID:                 product.ID,
-		Name:               product.Name,
-		Price:              product.Price,
-		Weight:             product.Weight,
-		Stock:              product.Stock,
-		Image:              product.Image,
-		Description:        product.Description,
-		TokopediaProductID: product.TokopediaProductID,
-		ShopeeProductID:    product.ShopeeProductID,
+func ConvertProductToKafkaProductMessage(product *datastruct.Product, method datastruct.Method, user *datastruct.User) *datastruct.KafkaProductMessage {
+	productMessage := &datastruct.KafkaProductMessage{
+		Method:               method,
+		ID:                   product.ID,
+		Name:                 product.Name,
+		Price:                product.Price,
+		Weight:               product.Weight,
+		Stock:                product.Stock,
+		Image:                product.Image,
+		Description:          product.Description,
+		TokopediaProductID:   product.TokopediaProductID,
+		ShopeeProductID:      product.ShopeeProductID,
+		TokopediaFsID:        user.TokopediaFsID,
+		TokopediaShopID:      user.TokopediaShopID,
+		TokopediaBearerToken: user.TokopediaBearerToken,
+		ShopeePartnerID:      user.ShopeePartnerID,
+		ShopeeShopID:         user.ShopeeShopID,
+		ShopeeAccessToken:    user.ShopeeAccessToken,
+		ShopeeSign:           user.ShopeeSign,
 	}
 
 	return productMessage

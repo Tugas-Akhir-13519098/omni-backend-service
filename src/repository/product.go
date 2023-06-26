@@ -11,12 +11,12 @@ import (
 )
 
 type ProductRepository interface {
-	CreateProduct(product *datastruct.Product) error
+	CreateProduct(product *datastruct.Product, user *datastruct.User) error
 	GetProducts(userID string) ([]*datastruct.Product, error)
 	GetProductByID(productID string, userID string) (*datastruct.Product, error)
-	UpdateProduct(product *datastruct.Product) error
+	UpdateProduct(product *datastruct.Product, user *datastruct.User) error
 	UpdateMarketplaceProductId(productID string, TokopediaProductID int, ShopeeProductID int) error
-	DeleteProductByID(productID string, userID string) error
+	DeleteProductByID(productID string, user *datastruct.User) error
 	GetProductByMarketplaceProductID(TokopediaProductID int, ShopeeProductID int, userID string) (*datastruct.Product, error)
 }
 
@@ -29,14 +29,15 @@ func NewProductRepository(db *gorm.DB, writer *kafka.Writer) ProductRepository {
 	return &productRepository{db: db, writer: writer}
 }
 
-func (p *productRepository) CreateProduct(product *datastruct.Product) error {
+func (p *productRepository) CreateProduct(product *datastruct.Product, user *datastruct.User) error {
+	// Create Product
 	err := p.db.Model(&datastruct.Product{}).Create(&product).Error
 	if err != nil {
 		return err
 	}
 
 	// Change product to byte
-	productMessage := util.ConvertProductToProductMessage(product, datastruct.CREATE)
+	productMessage := util.ConvertProductToKafkaProductMessage(product, datastruct.CREATE, user)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -76,14 +77,14 @@ func (p *productRepository) GetProductByID(productId string, userID string) (*da
 	return product, nil
 }
 
-func (p *productRepository) UpdateProduct(product *datastruct.Product) error {
+func (p *productRepository) UpdateProduct(product *datastruct.Product, user *datastruct.User) error {
 	err := p.db.Model(&datastruct.Product{}).Where("id = ? AND user_id = ?", product.ID, product.UserID).Updates(product).Error
 	if err != nil {
 		return err
 	}
 
 	// Change product to byte
-	productMessage := util.ConvertProductToProductMessage(product, datastruct.UPDATE)
+	productMessage := util.ConvertProductToKafkaProductMessage(product, datastruct.UPDATE, user)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err
@@ -121,16 +122,20 @@ func (p *productRepository) UpdateMarketplaceProductId(productID string, Tokoped
 	return nil
 }
 
-func (p *productRepository) DeleteProductByID(productID string, userID string) error {
-	err := p.db.Where("id = ? AND user_id = ?", productID, userID).Delete(&datastruct.Product{}).Error
+func (p *productRepository) DeleteProductByID(productID string, user *datastruct.User) error {
+	var product *datastruct.Product
+	err := p.db.Model(&datastruct.Product{}).Where("id = ? AND user_id = ?", productID, user.ID).First(&product).Error
+	if err != nil {
+		return err
+	}
 
+	err = p.db.Where("id = ? AND user_id = ?", productID, user.ID).Delete(&datastruct.Product{}).Error
 	if err != nil {
 		return err
 	}
 
 	// Change product to byte
-	product := &datastruct.Product{}
-	productMessage := util.ConvertProductToProductMessage(product, datastruct.DELETE)
+	productMessage := util.ConvertProductToKafkaProductMessage(product, datastruct.DELETE, user)
 	messageByte, err := json.Marshal(productMessage)
 	if err != nil {
 		return err

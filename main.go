@@ -86,7 +86,7 @@ func main() {
 	orderRepository := repository.NewOrderRepository(db)
 
 	userService := service.NewUserService(userRepository)
-	productService := service.NewProductService(productRepository)
+	productService := service.NewProductService(productRepository, userRepository)
 	orderService := service.NewOrderService(orderRepository, productRepository, userRepository)
 
 	userController := controller.NewUserController(userService)

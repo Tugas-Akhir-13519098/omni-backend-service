@@ -19,7 +19,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
-  broker:
+  kafka:
     image: confluentinc/cp-kafka:7.3.2
     container_name: kafka
     ports:
@@ -29,11 +29,35 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    ports:
+      - '9000:9000'
+    environment:
+      - KAFKA_BROKERCONNECT=kafka:29092
+    depends_on:
+      - kafka
+
+  kafka-create-topics:
+    image: confluentinc/cp-kafka:7.3.2
+    depends_on:
+      - kafka
+    hostname: kafka-create-topics
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b kafka:29092 1 20 && \
+                       kafka-topics --create --replication-factor 1 --partitions 1 --if-not-exists --topic order --bootstrap-server kafka:29092 && \
+                       kafka-topics --create --replication-factor 1 --partitions 1 --if-not-exists --topic product --bootstrap-server kafka:29092 && \
+                       kafka-topics --create --replication-factor 1 --partitions 1 --if-not-exists --topic error --bootstrap-server kafka:29092 && \
+                       sleep infinity'"
+    environment:
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
 
 volumes:
   db:

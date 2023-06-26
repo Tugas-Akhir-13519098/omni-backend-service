@@ -31,11 +31,11 @@ func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.C
 	ID := uuid.New().String()
 
 	// Create Order
-	userID, err := o.userRepository.GetuserIDByShopID(order.TokopediaShopID, order.ShopeeShopID)
+	user, err := o.userRepository.GetUserByShopID(order.TokopediaShopID, order.ShopeeShopID)
 	if err != nil {
 		return nil, err
 	}
-	orderData := util.ConvertCreateOrderRequestToOrderDatastruct(order, ID, userID)
+	orderData := util.ConvertCreateOrderRequestToOrderDatastruct(order, ID, user.ID)
 	err = o.orderRepository.CreateOrder(orderData)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.C
 
 	// Create Order Product
 	for _, op := range order.Products {
-		product, _ := o.productRepository.GetProductByMarketplaceProductID(op.TokopediaProductID, op.ShopeeProductID, userID)
+		product, _ := o.productRepository.GetProductByMarketplaceProductID(op.TokopediaProductID, op.ShopeeProductID, user.ID)
 		orderProduct := &datastruct.OrderProduct{
 			OrderID:         ID,
 			ProductID:       product.ID,
@@ -58,7 +58,7 @@ func (o *orderService) CreateNewOrder(order *model.CreateOrderRequest) (*model.C
 
 		// Publish To Kafka New Stock
 		product.Stock -= op.ProductQuantity
-		err = o.productRepository.UpdateProduct(product)
+		err = o.productRepository.UpdateProduct(product, user)
 		if err != nil {
 			return nil, err
 		}

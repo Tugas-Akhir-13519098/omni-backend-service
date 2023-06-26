@@ -20,10 +20,11 @@ type ProductService interface {
 
 type productService struct {
 	productRepository repository.ProductRepository
+	userRepository    repository.UserRepository
 }
 
-func NewProductService(productRepository repository.ProductRepository) ProductService {
-	return &productService{productRepository: productRepository}
+func NewProductService(productRepository repository.ProductRepository, userRepository repository.UserRepository) ProductService {
+	return &productService{productRepository: productRepository, userRepository: userRepository}
 }
 
 func (p *productService) CreateProduct(product *model.CreateProductRequest) (*model.CreateProductResponse, error) {
@@ -39,7 +40,12 @@ func (p *productService) CreateProduct(product *model.CreateProductRequest) (*mo
 		Description: product.Description,
 	}
 
-	err := p.productRepository.CreateProduct(productData)
+	user, err := p.userRepository.GetUserByID(product.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	err = p.productRepository.CreateProduct(productData, user)
 	if err != nil {
 		return nil, err
 	}
@@ -71,16 +77,28 @@ func (p *productService) GetProducts(userID string) ([]*model.Product, error) {
 }
 
 func (p *productService) UpdateProduct(product *model.Product) error {
-	err := p.productRepository.UpdateProduct(&datastruct.Product{
-		ID:          product.ID,
-		UserID:      product.UserID,
-		Name:        product.Name,
-		Price:       product.Price,
-		Weight:      product.Weight,
-		Stock:       product.Stock,
-		Image:       product.Image,
-		Description: product.Description,
-	})
+	user, err := p.userRepository.GetUserByID(product.UserID)
+	if err != nil {
+		return err
+	}
+
+	productBefore, err := p.productRepository.GetProductByID(product.ID, product.UserID)
+	if err != nil {
+		return nil
+	}
+
+	err = p.productRepository.UpdateProduct(&datastruct.Product{
+		ID:                 product.ID,
+		UserID:             product.UserID,
+		Name:               product.Name,
+		Price:              product.Price,
+		Weight:             product.Weight,
+		Stock:              product.Stock,
+		Image:              product.Image,
+		Description:        product.Description,
+		TokopediaProductID: productBefore.TokopediaProductID,
+		ShopeeProductID:    productBefore.ShopeeProductID,
+	}, user)
 	if err != nil {
 		return err
 	}
@@ -97,7 +115,12 @@ func (p *productService) UpdateMarketplaceProductId(req *model.UpdateMarketplace
 }
 
 func (p *productService) DeleteProduct(productID string, userID string) error {
-	err := p.productRepository.DeleteProductByID(productID, userID)
+	user, err := p.userRepository.GetUserByID(userID)
+	if err != nil {
+		return err
+	}
+
+	err = p.productRepository.DeleteProductByID(productID, user)
 	if err != nil {
 		return err
 	}
