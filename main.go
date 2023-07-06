@@ -94,7 +94,6 @@ func main() {
 	orderController := controller.NewOrderController(orderService)
 
 	router := gin.Default()
-	router.Use(middleware.ErrorHandler)
 	router.Use(middleware.CORS(&cfg))
 
 	v1 := router.Group("api/v1")

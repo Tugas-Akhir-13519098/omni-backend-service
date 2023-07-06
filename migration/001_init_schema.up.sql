@@ -1,7 +1,7 @@
 CREATE TABLE "products" (
   "id" varchar PRIMARY KEY,
   "user_id" varchar NOT NULL,
-  "name" varchar UNIQUE NOT NULL,
+  "name" varchar NOT NULL,
   "price" int NOT NULL,
   "weight" float NOT NULL,
   "stock" int NOT NULL,
@@ -17,8 +17,8 @@ CREATE TABLE "orders" (
   "id" varchar PRIMARY KEY,
   "user_id" varchar NOT NULL,
   "total_price" float NOT NULL,
-  "tokopedia_order_id" int UNIQUE,
-  "shopee_order_id" varchar UNIQUE,
+  "tokopedia_order_id" int,
+  "shopee_order_id" varchar,
   "customer_name" varchar NOT NULL,
   "customer_phone" varchar NOT NULL,
   "customer_address" varchar NOT NULL,
@@ -60,3 +60,7 @@ ALTER TABLE "products" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
 
 ALTER TABLE "order_products" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+
+ALTER TABLE "products" ADD UNIQUE ("user_id", "name");
+
+ALTER TABLE "orders" ADD UNIQUE ("tokopedia_order_id", "shopee_order_id");

@@ -70,6 +70,7 @@ func (u *userController) GetUser(c *gin.Context) {
 	user, err := u.userService.GetUserByID(string(userID))
 	if err != nil {
 		c.AbortWithError(http.StatusUnauthorized, err)
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error(), "status": "failed"})
 		return
 	}
 

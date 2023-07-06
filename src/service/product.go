@@ -1,12 +1,14 @@
 package service
 
 import (
+	"errors"
 	"omni-backend-service/src/datastruct"
 	"omni-backend-service/src/model"
 	"omni-backend-service/src/repository"
 	"omni-backend-service/src/util"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type ProductService interface {
@@ -42,6 +44,9 @@ func (p *productService) CreateProduct(product *model.CreateProductRequest) (*mo
 
 	user, err := p.userRepository.GetUserByID(product.UserID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, model.UserNotFoundError
+		}
 		return nil, err
 	}
 
@@ -79,6 +84,9 @@ func (p *productService) GetProducts(userID string) ([]*model.Product, error) {
 func (p *productService) UpdateProduct(product *model.Product) error {
 	user, err := p.userRepository.GetUserByID(product.UserID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.UserNotFoundError
+		}
 		return err
 	}
 
@@ -117,6 +125,9 @@ func (p *productService) UpdateMarketplaceProductId(req *model.UpdateMarketplace
 func (p *productService) DeleteProduct(productID string, userID string) error {
 	user, err := p.userRepository.GetUserByID(userID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.UserNotFoundError
+		}
 		return err
 	}
 
