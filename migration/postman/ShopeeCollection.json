@@ -1,0 +1,509 @@
+{
+	"info": {
+		"_postman_id": "45ba5a07-0239-40d9-8a8b-415ab7d13efe",
+		"name": "Shopee",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25597323"
+	},
+	"item": [
+		{
+			"name": "Create Item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"original_price\":5000,\n    \"description\":\"Testing Product 1\",\n    \"weight\":500,\n    \"item_name\":\"Product 1\",\n    \"logistic_info\":[\n        {\n            \"enabled\":true,\n            \"logistic_id\":1\n        }\n    ],\n    \"category_id\":1,\n    \"image\":{\n        \"image_id_list\":[\n            \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n        ]\n    },\n    \"seller_stock\": [\n        {\n            \"stock\": 100\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/add_item?partner_id=1&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+					"protocol": "https",
+					"host": [
+						"partner",
+						"test-stable",
+						"shopeemobile",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"product",
+						"add_item"
+					],
+					"query": [
+						{
+							"key": "partner_id",
+							"value": "1"
+						},
+						{
+							"key": "shop_id",
+							"value": "1"
+						},
+						{
+							"key": "access_token",
+							"value": "shopee_token"
+						},
+						{
+							"key": "sign",
+							"value": "shopee_sign"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Item Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"original_price\":5000,\n    \"description\":\"Testing Product 1\",\n    \"weight\":500,\n    \"item_name\":\"Product 1\",\n    \"logistic_info\":[\n        {\n            \"enabled\":true,\n            \"logistic_id\":1\n        }\n    ],\n    \"category_id\":1,\n    \"image\":{\n        \"image_id_list\":[\n            \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n        ]\n    },\n    \"seller_stock\": [\n        {\n            \"stock\": 100\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/add_item?partner_id=1&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+							"protocol": "https",
+							"host": [
+								"partner",
+								"test-stable",
+								"shopeemobile",
+								"com"
+							],
+							"path": [
+								"api",
+								"v2",
+								"product",
+								"add_item"
+							],
+							"query": [
+								{
+									"key": "partner_id",
+									"value": "1"
+								},
+								{
+									"key": "shop_id",
+									"value": "1"
+								},
+								{
+									"key": "access_token",
+									"value": "shopee_token"
+								},
+								{
+									"key": "sign",
+									"value": "shopee_sign"
+								}
+							]
+						}
+					},
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"\",\n    \"message\": \"\",\n    \"warning\": \"\",\n    \"request_id\": \"98eae35efff24dd0974c21a847127184\",\n    \"response\": {\n        \"item_id\": 4,\n        \"category_id\": 1,\n        \"item_name\": \"Product 4\",\n        \"description\": \"Testing Product 4\",\n        \"price_info\": {\n            \"original_price\": 5000,\n            \"current_price\": 5000\n        },\n        \"seller_stock\": [\n          {\n            \"stock\": 100\n           }\n         ],\n        \"images\": {\n            \"image_url_list\": [\n                \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n            ],\n            \"image_id_list\": [\n                \"a17bb867ecfe900e92e460c57b892590\"\n            ]\n        },\n        \"weight\": 500,\n        \"logistic_info\": [\n            {\n            \"enabled\":true,\n            \"logistic_id\":1\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"item_id\": 1,\n    \"original_price\":5000,\n    \"description\":\"Testing Product 1\",\n    \"weight\":500,\n    \"item_name\":\"Product 1\",\n    \"image\":{\n        \"image_id_list\":[\n            \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n        ]\n    },\n    \"seller_stock\": [\n        {\n            \"stock\": 100\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/update_item?partner_id=1&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+					"protocol": "https",
+					"host": [
+						"partner",
+						"test-stable",
+						"shopeemobile",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"product",
+						"update_item"
+					],
+					"query": [
+						{
+							"key": "partner_id",
+							"value": "1"
+						},
+						{
+							"key": "shop_id",
+							"value": "1"
+						},
+						{
+							"key": "access_token",
+							"value": "shopee_token"
+						},
+						{
+							"key": "sign",
+							"value": "shopee_sign"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Item Failed",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": 1,\n    \"original_price\":5000,\n    \"description\":\"Testing Product 1\",\n    \"weight\":500,\n    \"item_name\":\"Product 1\",\n    \"image\":{\n        \"image_id_list\":[\n            \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n        ]\n    },\n    \"seller_stock\": [\n        {\n            \"stock\": 100\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/update_item?partner_id=2&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+							"protocol": "https",
+							"host": [
+								"partner",
+								"test-stable",
+								"shopeemobile",
+								"com"
+							],
+							"path": [
+								"api",
+								"v2",
+								"product",
+								"update_item"
+							],
+							"query": [
+								{
+									"key": "partner_id",
+									"value": "2"
+								},
+								{
+									"key": "shop_id",
+									"value": "1"
+								},
+								{
+									"key": "access_token",
+									"value": "shopee_token"
+								},
+								{
+									"key": "sign",
+									"value": "shopee_sign"
+								}
+							]
+						}
+					},
+					"status": "Service Unavailable",
+					"code": 503,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"product.error_param\",\n    \"message\": \"invalid field ItemId: value must  Not Null\",\n    \"warning\": \"\",\n    \"request_id\": \"84419e995adc9cdd17dc4d71cad16cec\"\n}"
+				},
+				{
+					"name": "Update Item Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": 1,\n    \"original_price\":5000,\n    \"description\":\"Testing Product 1\",\n    \"weight\":500,\n    \"item_name\":\"Product 1\",\n    \"image\":{\n        \"image_id_list\":[\n            \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n        ]\n    },\n    \"seller_stock\": [\n        {\n            \"stock\": 100\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/update_item?partner_id=1&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+							"protocol": "https",
+							"host": [
+								"partner",
+								"test-stable",
+								"shopeemobile",
+								"com"
+							],
+							"path": [
+								"api",
+								"v2",
+								"product",
+								"update_item"
+							],
+							"query": [
+								{
+									"key": "partner_id",
+									"value": "1"
+								},
+								{
+									"key": "shop_id",
+									"value": "1"
+								},
+								{
+									"key": "access_token",
+									"value": "shopee_token"
+								},
+								{
+									"key": "sign",
+									"value": "shopee_sign"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"\",\n    \"message\": \"\",\n    \"warning\": \"\",\n    \"request_id\": \"98eae35efff24dd0974c21a847127184\",\n    \"response\": {\n        \"item_id\": 4,\n        \"item_name\": \"Product 4\",\n        \"description\": \"Testing Product 4\",\n        \"price_info\": {\n            \"original_price\": 10000,\n            \"current_price\": 10000\n        },\n        \"seller_stock\": [\n          {\n            \"stock\": 100\n           }\n         ],\n        \"images\": {\n            \"image_url_list\": [\n                \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n            ],\n            \"image_id_list\": [\n                \"a17bb867ecfe900e92e460c57b892590\"\n            ]\n        },\n        \"weight\": 1\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Item Success",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"item_id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/delete_item?partner_id=1&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+					"protocol": "https",
+					"host": [
+						"partner",
+						"test-stable",
+						"shopeemobile",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"product",
+						"delete_item"
+					],
+					"query": [
+						{
+							"key": "partner_id",
+							"value": "1"
+						},
+						{
+							"key": "shop_id",
+							"value": "1"
+						},
+						{
+							"key": "access_token",
+							"value": "shopee_token"
+						},
+						{
+							"key": "sign",
+							"value": "shopee_sign"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Item",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"item_id\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://partner.test-stable.shopeemobile.com/api/v2/product/delete_item?partner_id=1&shop_id=1&access_token=shopee_token&sign=shopee_sign",
+							"protocol": "https",
+							"host": [
+								"partner",
+								"test-stable",
+								"shopeemobile",
+								"com"
+							],
+							"path": [
+								"api",
+								"v2",
+								"product",
+								"delete_item"
+							],
+							"query": [
+								{
+									"key": "partner_id",
+									"value": "1"
+								},
+								{
+									"key": "shop_id",
+									"value": "1"
+								},
+								{
+									"key": "access_token",
+									"value": "shopee_token"
+								},
+								{
+									"key": "sign",
+									"value": "shopee_sign"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"\",\n    \"message\": \"\",\n    \"warning\": \"\",\n    \"request_id\": \"558ce5454c9b461aad47aa5cd8bb1e9f\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://partner.test-stable.shopeemobile.com/api/v2/order/get_order_detail?order_sn_list=B&shop_id=1&partner_id=1",
+					"protocol": "https",
+					"host": [
+						"partner",
+						"test-stable",
+						"shopeemobile",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2",
+						"order",
+						"get_order_detail"
+					],
+					"query": [
+						{
+							"key": "order_sn_list",
+							"value": "B"
+						},
+						{
+							"key": "shop_id",
+							"value": "1"
+						},
+						{
+							"key": "partner_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Order",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://partner.test-stable.shopeemobile.com/api/v2/order/get_order_detail?order_sn_list=B&shop_id=1&partner_id=1",
+							"protocol": "https",
+							"host": [
+								"partner",
+								"test-stable",
+								"shopeemobile",
+								"com"
+							],
+							"path": [
+								"api",
+								"v2",
+								"order",
+								"get_order_detail"
+							],
+							"query": [
+								{
+									"key": "order_sn_list",
+									"value": "B"
+								},
+								{
+									"key": "shop_id",
+									"value": "1"
+								},
+								{
+									"key": "partner_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"\",\n    \"message\": \"\",\n    \"response\": {\n        \"order_list\": [\n            {\n                \"item_list\": [\n                    {\n                        \"item_id\": 4,\n                        \"item_name\": \"Product 4\",\n                        \"model_quantity_purchased\": 5,\n                        \"model_original_price\": 50000\n                    }\n                ],\n                \"order_sn\": \"B\",\n                \"order_status\": \"COMPLETED\",\n                \"recipient_address\": {\n                    \"name\": \"Jordan\",\n                    \"phone\": \"******10\",\n                    \"district\": \"Balikpapan Tengah\",\n                    \"city\": \"Balikpapan\",\n                    \"state\": \"Kalimantan Timur\",\n                    \"region\": \"ID\",\n                    \"zipcode\": \"820116\",\n                    \"full_address\": \"Full Address\"\n                },\n                \"total_amount\": 10000\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	]
+}

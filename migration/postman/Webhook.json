@@ -1,0 +1,98 @@
+{
+	"info": {
+		"_postman_id": "39ae86cf-9528-4ea5-87a7-9383721a92f1",
+		"name": "Webhook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25597323"
+	},
+	"item": [
+		{
+			"name": "Tokopedia",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fs_id\": 1,\n    \"order_id\": 2,\n    \"products\": [{\n        \"id\": 4,\n        \"Name\": \"Product 4\",\n        \"quantity\": 5,\n        \"price\": 10000,\n        \"total_price\": 50000\n    }],\n    \"recipient\": {\n        \"Name\": \"Jordan\",\n        \"phone\": \"081187654321\",\n        \"address\": {\n            \"address_full\": \"Jl. Dr. Satrio, Tokopedia Tower\",\n            \"district\": \"Karet Semanggi\",\n            \"city\": \"Jakarta Selatan\",\n            \"province\": \"DKI Jakarta\",\n            \"country\": \"Indonesia\",\n            \"postal_code\": \"12950\"\n        }\n    },\n    \"shop_id\": 1,\n    \"shop_name\": \"Shop 1\",\n    \"order_status\": 220\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8000/api/v1/order/tokopedia/notif"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Order Status",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_status\":700,\n    \"fs_id\":1,\n    \"shop_id\":1,\n    \"order_id\":2,\n    \"product_details\": [\n        {\n            \"id\":4,\n            \"Name\":\"Product 4\",\n            \"notes\":\"\",\n            \"currency\":\"Rp.\",\n            \"weight\":1,\n            \"total_weight\":5,\n            \"price\":10000,\n            \"total_price\":50000,\n            \"quantity\":5,\n            \"sku\":\"SKU/123\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8000/api/v1/order/tokopedia/status"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Shopee",
+			"item": [
+				{
+					"name": "Push New Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\":{\n        \"ordersn\":\"B\",\n        \"status\":\"UNPAID\"\n    },\n    \"shop_id\": 1,\n    \"code\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8000/api/v1/order/shopee/"
+					},
+					"response": []
+				},
+				{
+					"name": "Push Change Status Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"data\":{\n        \"ordersn\":\"B\",\n        \"status\":\"CANCELLED\"\n    },\n    \"shop_id\": 1,\n    \"code\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8000/api/v1/order/shopee/"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

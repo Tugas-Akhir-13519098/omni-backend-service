@@ -1,0 +1,423 @@
+{
+	"info": {
+		"_postman_id": "58adf598-969a-471b-af21-97b654a61ea6",
+		"name": "Tokopedia",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25597323"
+	},
+	"item": [
+		{
+			"name": "Create Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"products\":[\n      {\n         \"Name\":\"Product 1\",\n         \"category_id\":1,\n         \"price_currency\":\"IDR\",\n         \"price\":5000,\n         \"status\":\"LIMITED\",\n         \"min_order\":1,\n         \"weight\":500,\n         \"weight_unit\":\"GR\",\n         \"condition\":\"NEW\",\n         \"stock\":100,\n         \"pictures\":[\n            {\n               \"file_path\":\"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n            }\n         ],\n         \"description\":\"Testing Product 1\"\n      }\n   ]\n}"
+				},
+				"url": {
+					"raw": "https://fs.tokopedia.net/v3/products/fs/1/create?shop_id=1",
+					"protocol": "https",
+					"host": [
+						"fs",
+						"tokopedia",
+						"net"
+					],
+					"path": [
+						"v3",
+						"products",
+						"fs",
+						"1",
+						"create"
+					],
+					"query": [
+						{
+							"key": "shop_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Product Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"products\":[\n      {\n         \"Name\":\"Product 1\",\n         \"category_id\":1,\n         \"price_currency\":\"IDR\",\n         \"price\":5000,\n         \"status\":\"LIMITED\",\n         \"min_order\":1,\n         \"weight\":500,\n         \"weight_unit\":\"GR\",\n         \"condition\":\"NEW\",\n         \"stock\":100,\n         \"pictures\":[\n            {\n               \"file_path\":\"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\"\n            }\n         ],\n         \"Description\":\"Testing Product 1\"\n      }\n   ]\n}"
+						},
+						"url": {
+							"raw": "https://fs.tokopedia.net/v3/products/fs/1/create?shop_id=1",
+							"protocol": "https",
+							"host": [
+								"fs",
+								"tokopedia",
+								"net"
+							],
+							"path": [
+								"v3",
+								"products",
+								"fs",
+								"1",
+								"create"
+							],
+							"query": [
+								{
+									"key": "shop_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"header\": {\n        \"process_time\": 1.054341405,\n        \"messages\": \"Your request has been processed successfully\"\n    },\n    \"data\": {\n        \"total_data\": 1,\n        \"success_data\": 1,\n        \"fail_data\": 0,\n        \"success_rows_data\": [\n            {\n                \"product_id\": 4\n            }\n        ]\n    }\n}\n"
+				}
+			]
+		},
+		{
+			"name": "Update Product",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\":[\n        {\n            \"name\": \"Product 1\",\n            \"price\": 5000,\n            \"weight\": 500,\n            \"stock\": 100,\n            \"image\": \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\",\n            \"description\": \"Testing Product 1 Updated\"\n        }\n   ]\n}"
+				},
+				"url": {
+					"raw": "https://fs.tokopedia.net/v3/products/fs/1/edit?shop_id=1",
+					"protocol": "https",
+					"host": [
+						"fs",
+						"tokopedia",
+						"net"
+					],
+					"path": [
+						"v3",
+						"products",
+						"fs",
+						"1",
+						"edit"
+					],
+					"query": [
+						{
+							"key": "shop_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Product Failed",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\":[\n        {\n            \"name\": \"Product 1\",\n            \"price\": 5000,\n            \"weight\": 500,\n            \"stock\": 100,\n            \"image\": \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\",\n            \"description\": \"Testing Product 1 Updated\"\n        }\n   ]\n}"
+						},
+						"url": {
+							"raw": "https://fs.tokopedia.net/v3/products/fs/1/edit?shop_id=2",
+							"protocol": "https",
+							"host": [
+								"fs",
+								"tokopedia",
+								"net"
+							],
+							"path": [
+								"v3",
+								"products",
+								"fs",
+								"1",
+								"edit"
+							],
+							"query": [
+								{
+									"key": "shop_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"status": "Service Unavailable",
+					"code": 503,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 09 Jun 2023 13:54:20 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "60"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 google"
+						},
+						{
+							"key": "Alt-Svc",
+							"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"header\": {\n        \"process_time\": 0.702986751,\n        \"messages\": \"Your request has been processed successfully\"\n    },\n    \"data\": {\n        \"total_data\": 1,\n        \"success_data\": 0,\n        \"fail_data\": 1,\n        \"failed_rows_data\": [\n            {\n                \"product_name\": \"Product Testing V3 1.39\",\n                \"product_price\": 10000,\n                \"sku\": \"TST21\",\n                \"error\": [\n                    \"Value [Testing Product 4] of field [name] is already used, please use different value\"\n                ]\n            }\n        ]\n    }\n}"
+				},
+				{
+					"name": "Update Product Success",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\":[\n        {\n            \"name\": \"Product 1\",\n            \"price\": 5000,\n            \"weight\": 500,\n            \"stock\": 100,\n            \"image\": \"https://i.ibb.co/C8psmqf/Logo-VIX-color.png\",\n            \"description\": \"Testing Product 1 Updated 2\"\n        }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fs.tokopedia.net/v3/products/fs/1/edit?shop_id=1",
+							"protocol": "https",
+							"host": [
+								"fs",
+								"tokopedia",
+								"net"
+							],
+							"path": [
+								"v3",
+								"products",
+								"fs",
+								"1",
+								"edit"
+							],
+							"query": [
+								{
+									"key": "shop_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"header\": {\n        \"process_time\": 0,\n        \"messages\": \"Your request has been processed successfully\"\n    },\n    \"data\": {\n        \"total_data\": 1,\n        \"success_data\": 1,\n        \"fail_data\": 0,\n        \"success_rows_data\": [\n            {\n                \"product_id\": 4\n            }\n        ]\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"product_id\":[1]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://fs.tokopedia.net/v3/products/fs/1/delete?shop_id=1",
+					"protocol": "https",
+					"host": [
+						"fs",
+						"tokopedia",
+						"net"
+					],
+					"path": [
+						"v3",
+						"products",
+						"fs",
+						"1",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "shop_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Product",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer C-UMqWWXRqaJugr7w5U0zQ",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\":[1]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://fs.tokopedia.net/v3/products/fs/1/delete?shop_id=1",
+							"protocol": "https",
+							"host": [
+								"fs",
+								"tokopedia",
+								"net"
+							],
+							"path": [
+								"v3",
+								"products",
+								"fs",
+								"1",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "shop_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"header\": {\n        \"process_time\": 0.588856684,\n        \"messages\": \"Your request has been processed successfully\"\n    },\n    \"data\": {\n        \"total_data\": 1,\n        \"succeed_rows\": 1,\n        \"failed_rows\": 0,\n        \"failed_rows_data\": null\n    }\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "tokopedia_token"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
